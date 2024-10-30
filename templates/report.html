@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Results - {{ execution_id }}</title>
+    <link rel="stylesheet" href="report.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="header">
+    <h1>Test Results - {{ execution_id }}</h1>
+    <div class="timestamp">{{ timestamp }}</div>
+</div>
+
+<div class="summary">
+    <h2>Overall Summary</h2>
+    <div class="summary-grid">
+        <div class="stat-box">
+            <div class="label">Total Tests</div>
+            <div class="value">{{ summary.total_tests }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Passed</div>
+            <div class="value pass">{{ summary.passed_tests }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Failed</div>
+            <div class="value fail">{{ summary.failed_tests }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="label">Success Rate</div>
+            <div class="value">{{ summary.success_rate }}%</div>
+        </div>
+    </div>
+</div>
+
+{% for module_name, module in modules.items() %}
+<div class="module-section">
+    <h2>{{ module_name }}</h2>
+    <div class="module-stats">
+        <span>Total: {{ module.stats.total }}</span>
+        <span class="pass">Passed: {{ module.stats.passed }}</span>
+        <span class="fail">Failed: {{ module.stats.failed }}</span>
+        <span>Success Rate: {{ module.stats.success_rate }}%</span>
+    </div>
+
+    <div class="test-results">
+        {% for test in module.tests %}
+        <div class="test-case" id="test-{{ test.name }}">
+            <div class="test-header">
+                <div class="test-title">
+                    <i class="fas fa-chevron-right"></i>
+                    {{ test.name }}
+                </div>
+                <div class="test-meta">
+                    <span class="command-count">{{ test.details.command_logs|length }} commands</span>
+                    <span class="duration">{{ '{:.2f}'.format(test.duration|float) }}s</span>
+                    <span class="status {{ test.status_class }}">{{ test.status }}</span>
+                </div>
+            </div>
+
+            <div class="test-details hidden">
+                {% if test.error_message %}
+                <div class="error-message">{{ test.error_message }}</div>
+                {% endif %}
+
+                {% if test.details and test.details.command_logs %}
+                <div class="command-log">
+                    {% for log in test.details.command_logs %}
+                    <div class="log-entry" data-node="{{ log.node }}">
+                        <div class="entry-header">
+                            <div class="entry-info">
+                                <span class="node-label">{{ log.node }}</span>
+                                <span class="command-label">$ {{ log.command }}</span>
+                            </div>
+                            <div class="entry-meta">
+                                <span class="timestamp">{{ log.timestamp }}</span>
+                                <span class="duration">{{ '{:.3f}'.format(log.duration|float) }}s</span>
+                                {% if log.exit_code != 0 %}
+                                <span class="exit-code fail">Exit Code: {{ log.exit_code }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="entry-content">
+                            <pre class="output">{{ log.output }}</pre>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+<script src="report.js"></script>
+</body>
+</html>

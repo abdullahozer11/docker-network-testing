@@ -1,0 +1,2 @@
+docker exec -it network-test-framework-node1-1 sh
+docker exec -it network-test-framework-node2-1 sh

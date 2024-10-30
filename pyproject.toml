@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "network-test-framework"
+version = "0.1.0"
+description = "A Python-based framework for testing network configurations and protocols, focusing on common networking scenarios."
+authors = ["abdullahozer11 <abdullahozer11@hotmail.com>"]
+packages = [{include = "src"}]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pytest = ">=7.0.0"
+paramiko = ">=3.0.0"
+pyyaml = ">=6.0.0"
+rich = ">=13.0.0"
+pytest-html = ">=4.0.0"
+pytest-xdist = ">=3.0.0"
+isort = "^5.13.2"
+flake8 = "^7.1.0"
+black = "^24.4.2"
+docker = "^7.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
